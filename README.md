@@ -1,4 +1,4 @@
-# Multi-Agent Design System
+# MyCraftCrew
 
 A scalable multi-agent system for generating product designs and collages using Python, FastAPI, and Pillow.
 

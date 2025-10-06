@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# Multi-Agent Design System Startup Script
+# MyCraftCrew Startup Script
 
-echo "🎨 Starting Multi-Agent Design System..."
+echo "🎨 Starting MyCraftCrew..."
 echo "======================================"
 
 # Check if Python 3 is available

@@ -24,7 +24,7 @@ def upload_images_and_generate_collage(image_paths, api_base_url="http://localho
         api_base_url: Base URL of the API server
     """
     
-    print("🎨 Multi-Agent Design System - Collage Generation Example")
+    print("🎨 MyCraftCrew - Collage Generation Example")
     print("=" * 60)
     
     # Check if images exist

@@ -1,5 +1,5 @@
 """
-Main entry point for the Multi-Agent Design System.
+Main entry point for MyCraftCrew.
 
 This module initializes the FastAPI application and starts the server.
 """
@@ -27,7 +27,7 @@ async def lifespan(app: FastAPI):
     Handles startup and shutdown events.
     """
     # Startup
-    logging.info("Starting Multi-Agent Design System...")
+    logging.info("Starting MyCraftCrew...")
     
     # Create necessary directories
     create_directories(settings)
@@ -39,18 +39,18 @@ async def lifespan(app: FastAPI):
     # Store agents in app state
     app.state.design_agent = design_agent
     
-    logging.info("Multi-Agent Design System started successfully")
+    logging.info("MyCraftCrew started successfully")
     
     yield
     
     # Shutdown
-    logging.info("Shutting down Multi-Agent Design System...")
+    logging.info("Shutting down MyCraftCrew...")
     
     # Stop agents
     if hasattr(app.state, 'design_agent'):
         await app.state.design_agent.stop()
     
-    logging.info("Multi-Agent Design System stopped")
+    logging.info("MyCraftCrew stopped")
 
 
 def create_app() -> FastAPI:
@@ -67,7 +67,7 @@ def create_app() -> FastAPI:
     app = FastAPI(
         title=settings.app_name,
         version=settings.app_version,
-        description="A multi-agent system for generating product designs and collages",
+        description="MyCraftCrew - A multi-agent system for generating product designs and collages",
         lifespan=lifespan,
         debug=settings.debug
     )
@@ -86,7 +86,7 @@ def create_app() -> FastAPI:
     @app.get("/")
     async def root():
         return {
-            "message": "Welcome to Multi-Agent Design System",
+            "message": "Welcome to MyCraftCrew",
             "version": settings.app_version,
             "docs": "/docs",
             "health": "/api/v1/health"
