@@ -146,9 +146,9 @@ def main():
     
     # Example image paths (you can modify these)
     example_images = [
-        "example1.jpg",
-        "example2.jpg", 
-        "example3.jpg"
+        "my_craft_crew/images/1.jpg",
+        "my_craft_crew/images/2.jpg", 
+        "my_craft_crew/images/3.jpg"
     ]
     
     # Check if example images exist, if not, create some dummy ones

@@ -11,7 +11,7 @@ from uuid import UUID
 
 from agents.base_agent import BaseAgent
 from models.task_models import Task, TaskStatus, AgentType
-from models.design_models import DesignRequest, CollageGenerationResult
+from models.design_models import DesignRequest, CollageGenerationResult, ProcessingOptions
 from services.collage_generator import CollageGenerator
 from services.image_processor import ImageProcessor
 
@@ -146,7 +146,6 @@ class DesignAgent(BaseAgent):
         Returns:
             DesignRequest object
         """
-        from ..models.design_models import ProcessingOptions
         
         # Create processing options
         processing_options = ProcessingOptions(

@@ -14,7 +14,7 @@ from fastapi.staticfiles import StaticFiles
 import uvicorn
 
 from config.settings import settings, setup_logging, create_directories
-from api.routes import router
+from api.routes import router, set_design_agent
 from api.middleware import setup_middleware
 from agents.design_agent import DesignAgent
 
@@ -35,6 +35,9 @@ async def lifespan(app: FastAPI):
     # Initialize and start agents
     design_agent = DesignAgent()
     await design_agent.start()
+    
+    # Set global design agent reference for routes
+    set_design_agent(design_agent)
     
     # Store agents in app state
     app.state.design_agent = design_agent

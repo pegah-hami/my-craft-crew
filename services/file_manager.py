@@ -10,7 +10,7 @@ import shutil
 import logging
 from datetime import datetime
 from typing import List, Optional, Dict, Any
-from uuid import UUID
+from uuid import UUID, uuid4
 from pathlib import Path
 
 from fastapi import UploadFile
@@ -80,7 +80,7 @@ class FileManager:
         
         # Generate unique filename
         timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
-        file_id = UUID()
+        file_id = uuid4()
         
         # Get file extension
         file_extension = Path(file.filename).suffix.lower()

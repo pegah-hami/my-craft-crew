@@ -230,28 +230,32 @@ class CollageGenerator:
             x = col * (cell_width + spacing)
             y = row * (cell_height + spacing)
             
-            # Load and resize image
-            with Image.open(image_info.file_path) as img:
-                # Resize to fit cell
-                img.thumbnail((cell_width, cell_height), Image.Resampling.LANCZOS)
-                
-                # Center image in cell
-                paste_x = x + (cell_width - img.width) // 2
-                paste_y = y + (cell_height - img.height) // 2
-                
-                canvas.paste(img, (paste_x, paste_y))
-                
-                # Create element record
-                element = CollageElement(
-                    image_id=image_info.id,
-                    position=ImagePosition(
-                        x=paste_x,
-                        y=paste_y,
-                        width=img.width,
-                        height=img.height
+            # Load and resize image - use the processed image path
+            try:
+                with Image.open(image_info.file_path) as img:
+                    # Resize to fit cell
+                    img.thumbnail((cell_width, cell_height), Image.Resampling.LANCZOS)
+                    
+                    # Center image in cell
+                    paste_x = x + (cell_width - img.width) // 2
+                    paste_y = y + (cell_height - img.height) // 2
+                    
+                    canvas.paste(img, (paste_x, paste_y))
+                    
+                    # Create element record
+                    element = CollageElement(
+                        image_id=image_info.id,
+                        position=ImagePosition(
+                            x=paste_x,
+                            y=paste_y,
+                            width=img.width,
+                            height=img.height
+                        )
                     )
-                )
-                elements.append(element)
+                    elements.append(element)
+            except Exception as e:
+                self.logger.error(f"Failed to load image {image_info.file_path}: {str(e)}")
+                continue
         
         return canvas, elements
     
@@ -288,29 +292,33 @@ class CollageGenerator:
         
         # Stack images vertically
         for image_info in images:
-            # Load and resize image
-            with Image.open(image_info.file_path) as img:
-                # Resize to fit width and calculated height
-                img.thumbnail((width, image_height), Image.Resampling.LANCZOS)
-                
-                # Center horizontally
-                paste_x = (width - img.width) // 2
-                
-                canvas.paste(img, (paste_x, current_y))
-                
-                # Create element record
-                element = CollageElement(
-                    image_id=image_info.id,
-                    position=ImagePosition(
-                        x=paste_x,
-                        y=current_y,
-                        width=img.width,
-                        height=img.height
+            # Load and resize image - use the processed image path
+            try:
+                with Image.open(image_info.file_path) as img:
+                    # Resize to fit width and calculated height
+                    img.thumbnail((width, image_height), Image.Resampling.LANCZOS)
+                    
+                    # Center horizontally
+                    paste_x = (width - img.width) // 2
+                    
+                    canvas.paste(img, (paste_x, current_y))
+                    
+                    # Create element record
+                    element = CollageElement(
+                        image_id=image_info.id,
+                        position=ImagePosition(
+                            x=paste_x,
+                            y=current_y,
+                            width=img.width,
+                            height=img.height
+                        )
                     )
-                )
-                elements.append(element)
-                
-                current_y += img.height + spacing
+                    elements.append(element)
+                    
+                    current_y += img.height + spacing
+            except Exception as e:
+                self.logger.error(f"Failed to load image {image_info.file_path}: {str(e)}")
+                continue
         
         return canvas, elements
     
@@ -354,23 +362,27 @@ class CollageGenerator:
             x = center_x + radius * math.cos(angle) - image_size // 2
             y = center_y + radius * math.sin(angle) - image_size // 2
             
-            # Load and resize image
-            with Image.open(image_info.file_path) as img:
-                img.thumbnail((image_size, image_size), Image.Resampling.LANCZOS)
-                
-                canvas.paste(img, (int(x), int(y)))
-                
-                # Create element record
-                element = CollageElement(
-                    image_id=image_info.id,
-                    position=ImagePosition(
-                        x=int(x),
-                        y=int(y),
-                        width=img.width,
-                        height=img.height
+            # Load and resize image - use the processed image path
+            try:
+                with Image.open(image_info.file_path) as img:
+                    img.thumbnail((image_size, image_size), Image.Resampling.LANCZOS)
+                    
+                    canvas.paste(img, (int(x), int(y)))
+                    
+                    # Create element record
+                    element = CollageElement(
+                        image_id=image_info.id,
+                        position=ImagePosition(
+                            x=int(x),
+                            y=int(y),
+                            width=img.width,
+                            height=img.height
+                        )
                     )
-                )
-                elements.append(element)
+                    elements.append(element)
+            except Exception as e:
+                self.logger.error(f"Failed to load image {image_info.file_path}: {str(e)}")
+                continue
         
         return canvas, elements
     
@@ -404,44 +416,48 @@ class CollageGenerator:
         
         # Place images randomly
         for image_info in images:
-            # Load image
-            with Image.open(image_info.file_path) as img:
-                # Random size between 100-300px
-                max_size = random.randint(100, 300)
-                img.thumbnail((max_size, max_size), Image.Resampling.LANCZOS)
-                
-                # Find random position that doesn't overlap too much
-                attempts = 0
-                while attempts < 50:  # Prevent infinite loop
-                    x = random.randint(0, width - img.width)
-                    y = random.randint(0, height - img.height)
+            # Load image - use the processed image path
+            try:
+                with Image.open(image_info.file_path) as img:
+                    # Random size between 100-300px
+                    max_size = random.randint(100, 300)
+                    img.thumbnail((max_size, max_size), Image.Resampling.LANCZOS)
                     
-                    # Check for overlap
-                    overlaps = False
-                    for pos in used_positions:
-                        if (abs(x - pos[0]) < img.width and 
-                            abs(y - pos[1]) < img.height):
-                            overlaps = True
+                    # Find random position that doesn't overlap too much
+                    attempts = 0
+                    while attempts < 50:  # Prevent infinite loop
+                        x = random.randint(0, width - img.width)
+                        y = random.randint(0, height - img.height)
+                        
+                        # Check for overlap
+                        overlaps = False
+                        for pos in used_positions:
+                            if (abs(x - pos[0]) < img.width and 
+                                abs(y - pos[1]) < img.height):
+                                overlaps = True
+                                break
+                        
+                        if not overlaps:
                             break
+                        attempts += 1
                     
-                    if not overlaps:
-                        break
-                    attempts += 1
-                
-                canvas.paste(img, (x, y))
-                used_positions.append((x, y))
-                
-                # Create element record
-                element = CollageElement(
-                    image_id=image_info.id,
-                    position=ImagePosition(
-                        x=x,
-                        y=y,
-                        width=img.width,
-                        height=img.height
+                    canvas.paste(img, (x, y))
+                    used_positions.append((x, y))
+                    
+                    # Create element record
+                    element = CollageElement(
+                        image_id=image_info.id,
+                        position=ImagePosition(
+                            x=x,
+                            y=y,
+                            width=img.width,
+                            height=img.height
+                        )
                     )
-                )
-                elements.append(element)
+                    elements.append(element)
+            except Exception as e:
+                self.logger.error(f"Failed to load image {image_info.file_path}: {str(e)}")
+                continue
         
         return canvas, elements
     
@@ -480,25 +496,30 @@ class CollageGenerator:
                 if image_index < len(images):
                     image_info = images[image_index]
                     
-                    # Load and resize image
-                    with Image.open(image_info.file_path) as img:
-                        img.thumbnail((tile_size, tile_size), Image.Resampling.LANCZOS)
-                        
-                        canvas.paste(img, (x, y))
-                        
-                        # Create element record
-                        element = CollageElement(
-                            image_id=image_info.id,
-                            position=ImagePosition(
-                                x=x,
-                                y=y,
-                                width=img.width,
-                                height=img.height
+                    # Load and resize image - use the processed image path
+                    try:
+                        with Image.open(image_info.file_path) as img:
+                            img.thumbnail((tile_size, tile_size), Image.Resampling.LANCZOS)
+                            
+                            canvas.paste(img, (x, y))
+                            
+                            # Create element record
+                            element = CollageElement(
+                                image_id=image_info.id,
+                                position=ImagePosition(
+                                    x=x,
+                                    y=y,
+                                    width=img.width,
+                                    height=img.height
+                                )
                             )
-                        )
-                        elements.append(element)
-                        
+                            elements.append(element)
+                            
+                            image_index += 1
+                    except Exception as e:
+                        self.logger.error(f"Failed to load image {image_info.file_path}: {str(e)}")
                         image_index += 1
+                        continue
         
         return canvas, elements
     

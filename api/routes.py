@@ -41,8 +41,13 @@ file_manager = FileManager(
 image_processor = ImageProcessor()
 collage_generator = CollageGenerator()
 
-# Initialize design agent
-design_agent = DesignAgent()
+# Global design agent reference (will be set by main.py)
+global_design_agent = None
+
+def set_design_agent(agent):
+    """Set the global design agent reference."""
+    global global_design_agent
+    global_design_agent = agent
 
 # Security
 security = HTTPBearer()
@@ -386,6 +391,14 @@ async def process_design_task(task_id: UUID):
             return
         
         task = task_storage[task_id]
+        
+        # Get design agent from global reference
+        if not global_design_agent:
+            logging.error(f"Design agent not available for task {task_id}")
+            task.update_status(TaskStatus.FAILED, "Design agent not available")
+            return
+        
+        design_agent = global_design_agent
         
         # Validate task
         if not await design_agent.validate_task(task):
